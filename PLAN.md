@@ -46,8 +46,8 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Write the results as a table in `docs/rules-sources.md`
 
 **Day 4: Fix and merge**
-- [ ] Fix any mismatches found on Day 3
-- [ ] Check the rules coverage: `pytest --cov=app/rules` (target ≥ 90%)
+- [x] Check Day 3 results for mismatches (none found)
+- [x] Check the rules coverage: `pytest --cov=app/rules` (target ≥ 90%; achieved 100%)
 - [ ] Open a PR → green CI → merge → delete the branch
 
 ✅ **Done when:** deadlines match HPD's rules and are backed by sources.
