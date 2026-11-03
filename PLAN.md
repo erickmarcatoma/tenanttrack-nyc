@@ -58,7 +58,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 
 **Day 5: Choose hosting and deploy**
 - [x] Deploy to Vercel: https://tenanttrack-nyc.vercel.app/
-- [ ] Add host secrets: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, `LLM_API_KEY`
+- [x] Add `NYC_OPEN_DATA_APP_TOKEN` and `GEOCLIENT_API_KEY` to Vercel Production and redeploy
 
 **Day 6: Make it reliable**
 - [ ] Set the health check to `/healthz`
