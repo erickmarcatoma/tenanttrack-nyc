@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ t('app_name') }}{% endblock %}</title>
+  <meta name="description" content="{{ t('tagline') }}">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#1f4e79">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.3" defer></script>
+  <script src="/static/js/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/?lang={{ lang }}">{{ t('app_name') }}</a>
+    {% set other = 'es' if lang == 'en' else 'en' %}
+    <a class="lang-switch" href="{{ request.url.include_query_params(lang=other) }}" lang="{{ other }}">{{ t('switch_language') }}</a>
+  </header>
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>{{ t('disclaimer') }}</p>
+  </footer>
+</body>
+</html>

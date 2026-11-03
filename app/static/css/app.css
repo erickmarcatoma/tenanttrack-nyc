@@ -1,0 +1,58 @@
+:root {
+  --text: #1a1a1a;
+  --muted: #555;
+  --bg: #fff;
+  --accent: #1f4e79;
+  --overdue: #a4161a;
+  --due-soon: #8a5300;
+  --ok: #2b6a2f;
+  --border: #ccc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.skip-link { position: absolute; left: -999px; }
+.skip-link:focus { left: 1rem; top: 1rem; background: #fff; padding: .5rem; z-index: 10; }
+
+.site-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .75rem 1rem; background: var(--accent);
+}
+.site-header a { color: #fff; text-decoration: none; font-weight: 600; }
+.site-header a:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+
+main { max-width: 42rem; margin: 0 auto; padding: 1rem; }
+
+.search { display: flex; flex-direction: column; gap: .5rem; }
+.search input { font-size: 1rem; padding: .75rem; border: 2px solid var(--border); border-radius: 6px; }
+.search button {
+  font-size: 1rem; padding: .75rem; border: 0; border-radius: 6px;
+  background: var(--accent); color: #fff; font-weight: 600; min-height: 44px;
+}
+:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+
+.error { color: var(--overdue); font-weight: 600; }
+.meta { color: var(--muted); }
+
+.cards { list-style: none; padding: 0; display: grid; gap: .75rem; }
+.card { border: 1px solid var(--border); border-left: 6px solid var(--border); border-radius: 6px; padding: .75rem; }
+.card p { margin: .25rem 0; }
+.card .badge { font-weight: 700; font-size: .875rem; text-transform: uppercase; }
+.status-overdue { border-left-color: var(--overdue); }
+.status-overdue .badge { color: var(--overdue); }
+.status-due_soon { border-left-color: var(--due-soon); }
+.status-due_soon .badge { color: var(--due-soon); }
+.status-on_time { border-left-color: var(--ok); }
+.status-on_time .badge { color: var(--ok); }
+.details { color: var(--muted); font-size: .9375rem; }
+
+.site-footer { max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: var(--muted); font-size: .875rem; }

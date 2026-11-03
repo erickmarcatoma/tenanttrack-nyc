@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ t('report_title') }} · {{ t('app_name') }}{% endblock %}
+{% block content %}
+<h1>{{ t('report_title') }}</h1>
+<p class="meta">BIN {{ bin }}{% if bbl %} · BBL {{ bbl }}{% endif %}</p>
+
+<section aria-labelledby="violations-heading">
+  <h2 id="violations-heading">{{ t('open_violations') }} ({{ rows|length }})</h2>
+  {% if rows %}
+  <ul class="cards">
+    {% for r in rows %}
+    <li class="card status-{{ r.eval.status }}">
+      <p class="badge">{{ t('status_' ~ r.eval.status) if r.eval.status != 'unknown' else '—' }}</p>
+      <p class="desc">{{ r.v.description }}</p>
+      <p class="details">
+        {{ t('class') }} {{ r.v.violation_class }} · {{ r.class_label }}
+        {% if r.v.apartment %} · Apt {{ r.v.apartment }}{% endif %}
+        {% if r.eval.deadline %} · {{ t('correct_by') }} {{ r.eval.deadline.isoformat() }}{% endif %}
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>{{ t('no_violations') }}</p>
+  {% endif %}
+</section>
+
+<section aria-labelledby="complaints-heading">
+  <h2 id="complaints-heading">{{ t('complaints_311') }} ({{ complaints|length }})</h2>
+  {% if complaints %}
+  <ul class="list">
+    {% for c in complaints %}
+    <li>{{ c.created.isoformat() if c.created else '' }} · {{ c.complaint_type }} — {{ c.descriptor }} ({{ c.status }})</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>{{ t('no_complaints') }}</p>
+  {% endif %}
+</section>
+{% endblock %}
