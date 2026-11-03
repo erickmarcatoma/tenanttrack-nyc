@@ -30,9 +30,9 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Week 1: `feat/rules-verify`
 
 **Day 1: Research the rules**
-- [ ] Find HPD's official correction periods for class A, B, and C violations
-- [ ] Note special cases (lead paint, window guards, heat, mold) and their periods
-- [ ] Save source links in `docs/rules-sources.md`
+- [x] Find HPD's official correction periods for class A, B, and C violations
+- [x] Note special cases (lead paint, window guards, heat, mold) and their periods
+- [x] Save source links in `docs/rules-sources.md`
 
 **Day 2: Update the rules engine**
 - [ ] Update `CORRECTION_DAYS` in `app/rules/deadlines.py` and add a source comment
