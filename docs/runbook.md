@@ -13,20 +13,19 @@ Health check: `GET /healthz` returns `{"status": "ok"}`.
 ## Deploy
 
 - Merges to `main` run CI (lint, tests, accessibility).
-- Hosting: Render. The repo includes a `render.yaml` config that builds from the `Dockerfile` and checks `/healthz`.
-- Set secrets in the host: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, `LLM_API_KEY`, and optional `LLM_MODEL`, `SMTP_URL`, `SMS_API_KEY`.
+- Production URL: https://tenanttrack-nyc.vercel.app/
+- Hosting: Vercel, connected to the GitHub repository. The deployment's `/healthz` endpoint has been verified.
+- Set required environment variables in the Vercel project settings: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, and `LLM_API_KEY`. Optional variables: `LLM_MODEL`, `SMTP_URL`, `SMS_API_KEY`.
 
-### Render setup
+### Vercel operations
 
-1. Create a new Web Service in Render and connect this repo.
-2. Choose the Docker runtime; Render will use the repo's `Dockerfile`.
-3. Set the health check path to `/healthz`.
-4. Add the environment variables above in the Render dashboard.
-5. Deploy the service and confirm `/healthz` returns `{"status": "ok"}`.
+1. Connect the GitHub repository to a Vercel project and configure the production branch.
+2. Add environment variables in the Vercel project settings, then redeploy for changes to take effect.
+3. Confirm the production URL and `/healthz` return successfully after deployment.
 
 ## Roll back
 
-Redeploy the previous image or revert the commit on `main`.
+In the Vercel project dashboard, promote a previous healthy deployment. If the issue came from a code change, revert that change on the production branch and redeploy.
 
 ## Common incidents
 

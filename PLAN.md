@@ -57,9 +57,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Weeks 1–2: `chore/deploy`
 
 **Day 5: Choose hosting and deploy**
-- [x] Choose Render (low-friction Docker hosting with a free tier)
-- [x] Add Render config to deploy from the `Dockerfile`
-- [ ] Deploy the service
+- [x] Deploy to Vercel: https://tenanttrack-nyc.vercel.app/
 - [ ] Add host secrets: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, `LLM_API_KEY`
 
 **Day 6: Make it reliable**
@@ -68,8 +66,8 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [ ] Test on your phone over mobile data: search → report → letter
 
 **Day 7: Document and merge**
-- [ ] Add the live URL to the top of `README.md`
-- [ ] Update `docs/runbook.md` with the real deploy and rollback steps
+- [x] Add the live URL to the top of `README.md`
+- [x] Update `docs/runbook.md` with the real deploy and rollback steps
 - [ ] PR → merge → delete the branch
 
 ✅ **Done when:** a public link works on your phone.

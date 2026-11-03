@@ -1,8 +1,10 @@
 # TenantTrack NYC
 
+**Live app:** [tenanttrack-nyc.vercel.app](https://tenanttrack-nyc.vercel.app/)
+
 Bilingual, mobile-first web app that shows NYC tenants open HPD violations and 311 complaints, flags overdue repairs, and drafts complaints with an AI assistant. Built on NYC Open Data.
 
-> Status: in development. See [PLAN.md](PLAN.md) for the roadmap.
+> Status: deployed; features remain in development. See [PLAN.md](PLAN.md) for the roadmap.
 
 ## The problem
 
@@ -44,7 +46,7 @@ Postgres (cache, alert subscriptions)
 | Database | Postgres |
 | AI | LLM API with tool calling |
 | CI/CD | GitHub Actions (lint, pytest, axe accessibility checks) |
-| Hosting | Render (Dockerized web service) |
+| Hosting | Vercel |
 
 ## Data sources
 
