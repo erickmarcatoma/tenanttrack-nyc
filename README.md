@@ -44,7 +44,7 @@ Postgres (cache, alert subscriptions)
 | Database | Postgres |
 | AI | LLM API with tool calling |
 | CI/CD | GitHub Actions (lint, pytest, axe accessibility checks) |
-| Hosting | Render or Fly.io |
+| Hosting | Render (Dockerized web service) |
 
 ## Data sources
 

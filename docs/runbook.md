@@ -13,8 +13,16 @@ Health check: `GET /healthz` returns `{"status": "ok"}`.
 ## Deploy
 
 - Merges to `main` run CI (lint, tests, accessibility).
-- Hosting: Render or Fly.io (TBD). Build from the `Dockerfile`.
-- Set secrets in the host: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, `LLM_API_KEY`.
+- Hosting: Render. The repo includes a `render.yaml` config that builds from the `Dockerfile` and checks `/healthz`.
+- Set secrets in the host: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, `LLM_API_KEY`, and optional `LLM_MODEL`, `SMTP_URL`, `SMS_API_KEY`.
+
+### Render setup
+
+1. Create a new Web Service in Render and connect this repo.
+2. Choose the Docker runtime; Render will use the repo's `Dockerfile`.
+3. Set the health check path to `/healthz`.
+4. Add the environment variables above in the Render dashboard.
+5. Deploy the service and confirm `/healthz` returns `{"status": "ok"}`.
 
 ## Roll back
 

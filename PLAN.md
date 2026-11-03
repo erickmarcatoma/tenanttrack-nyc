@@ -57,9 +57,10 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Weeks 1–2: `chore/deploy`
 
 **Day 5: Choose hosting and deploy**
-- [ ] Choose Render or Fly.io (both have free or cheap tiers)
-- [ ] Deploy from the `Dockerfile`
-- [ ] Add secrets in the host: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`
+- [x] Choose Render (low-friction Docker hosting with a free tier)
+- [x] Add Render config to deploy from the `Dockerfile`
+- [ ] Deploy the service
+- [ ] Add host secrets: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, `LLM_API_KEY`
 
 **Day 6: Make it reliable**
 - [ ] Set the health check to `/healthz`
