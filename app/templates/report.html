@@ -1,22 +1,44 @@
 {% extends "base.html" %}
-{% block title %}{{ t('report_title') }} · {{ t('app_name') }}{% endblock %}
+{% block title %}{{ address or t('report_title') }} · {{ t('app_name') }}{% endblock %}
 {% block content %}
-<h1>{{ t('report_title') }}</h1>
-<p class="meta">BIN {{ bin }}{% if bbl %} · BBL {{ bbl }}{% endif %}</p>
+<p class="eyebrow">{{ t('report_title') }}</p>
+<h1>{{ address or (t('building') ~ ' ' ~ bin) }}</h1>
+
+{% if overdue %}
+<section class="summary summary-overdue" aria-labelledby="summary-heading">
+  <h2 id="summary-heading">{{ summary }}</h2>
+  <p>{{ t('summary_overdue_text') }}</p>
+  <a class="button" href="{{ letter_url }}">{{ t('what_can_i_do') }}</a>
+</section>
+{% else %}
+<section class="summary summary-ok" aria-labelledby="summary-heading">
+  <h2 id="summary-heading">{{ t('summary_none') }}</h2>
+  <p>{{ t('summary_none_text') }}</p>
+</section>
+{% endif %}
 
 <section aria-labelledby="violations-heading">
   <h2 id="violations-heading">{{ t('open_violations') }} ({{ rows|length }})</h2>
   {% if rows %}
   <ul class="cards">
     {% for r in rows %}
-    <li class="card status-{{ r.eval.status }}">
-      <p class="badge">{{ t('status_' ~ r.eval.status) if r.eval.status != 'unknown' else '—' }}</p>
-      <p class="desc">{{ r.v.description }}</p>
+    {% set st = r.eval.status %}
+    <li class="card status-{{ st }}">
+      <div class="card-top">
+        <p class="desc">{{ r.v.description }}</p>
+        {% if st != 'unknown' %}<span class="badge">{{ t('status_' ~ st) }}</span>{% endif %}
+      </div>
       <p class="details">
         {{ t('class') }} {{ r.v.violation_class }} · {{ r.class_label }}
-        {% if r.v.apartment %} · Apt {{ r.v.apartment }}{% endif %}
-        {% if r.eval.deadline %} · {{ t('correct_by') }} {{ r.eval.deadline.isoformat() }}{% endif %}
+        {% if r.v.apartment %} · {{ t('apt') }} {{ r.v.apartment }}{% endif %}
       </p>
+      {% if r.eval.deadline %}
+      <p class="details">
+        {{ t('correct_by') }} {{ r.eval.deadline|fdate(lang) }}
+        {% if st == 'overdue' %} · <strong>{{ t('days_overdue').replace('{n}', r.eval.days_overdue|string) }}</strong>{% endif %}
+      </p>
+      {% endif %}
+      <a class="card-action" href="{{ r.letter_url }}">{{ t('draft_about_this') }}</a>
     </li>
     {% endfor %}
   </ul>
@@ -30,11 +52,19 @@
   {% if complaints %}
   <ul class="list">
     {% for c in complaints %}
-    <li>{{ c.created.isoformat() if c.created else '' }} · {{ c.complaint_type }} — {{ c.descriptor }} ({{ c.status }})</li>
+    <li>
+      <span class="list-title">{{ c.complaint_type|title }} — {{ c.descriptor|capitalize }}</span>
+      <span class="details">{{ t('filed') }} {{ c.created|fdate(lang) }} · {{ c.status }}</span>
+    </li>
     {% endfor %}
   </ul>
   {% else %}
   <p>{{ t('no_complaints') }}</p>
   {% endif %}
 </section>
+
+<details class="ids">
+  <summary>{{ t('building_ids') }}</summary>
+  <p>BIN {{ bin }}{% if bbl %} · BBL {{ bbl }}{% endif %}</p>
+</details>
 {% endblock %}

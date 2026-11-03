@@ -1,6 +1,7 @@
 """Home page and address lookup."""
 
 import logging
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -34,4 +35,6 @@ async def search(address: str = Query(..., min_length=3, max_length=200), lang: 
     if not results:
         return RedirectResponse(f"/?lang={lang}&error=1", status_code=303)
     loc = results[0]
-    return RedirectResponse(f"/building/{loc.bin}?bbl={loc.bbl}&lang={lang}", status_code=303)
+    display = ", ".join(p for p in (loc.address.title(), loc.borough.title()) if p)
+    query = urlencode({"bbl": loc.bbl, "address": display, "lang": lang})
+    return RedirectResponse(f"/building/{loc.bin}?{query}", status_code=303)

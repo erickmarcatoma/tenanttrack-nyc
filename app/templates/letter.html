@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ t('letter_title') }} · {{ t('app_name') }}{% endblock %}
+{% block content %}
+<p><a href="{{ report_url }}">← {{ t('back_to_report') }}</a></p>
+<h1>{{ t('letter_title') }}</h1>
+<p class="lead">{{ t('letter_intro') }}</p>
+
+<form class="letter-form" action="/building/{{ bin }}/letter" method="get">
+  <input type="hidden" name="lang" value="{{ lang }}">
+  {% if bbl %}<input type="hidden" name="bbl" value="{{ bbl }}">{% endif %}
+  {% if violation %}<input type="hidden" name="violation" value="{{ violation }}">{% endif %}
+  <label for="name">{{ t('your_name') }}</label>
+  <input id="name" name="name" type="text" maxlength="100" autocomplete="name" value="{{ name }}">
+  <label for="apartment">{{ t('apartment') }}</label>
+  <input id="apartment" name="apartment" type="text" maxlength="20" value="{{ apartment }}">
+  <label for="address">{{ t('building_address') }}</label>
+  <input id="address" name="address" type="text" maxlength="200" autocomplete="street-address" value="{{ address }}">
+  <button type="submit" class="secondary">{{ t('update_letter') }}</button>
+</form>
+
+<label for="letter" class="letter-label">{{ t('letter_label') }}</label>
+<textarea id="letter" rows="18">{{ letter }}</textarea>
+
+<div class="letter-actions">
+  <button type="button" data-copy="#letter" data-copied="{{ t('copied') }}">{{ t('copy') }}</button>
+  <button type="button" data-download="#letter" data-filename="letter-to-landlord.txt">{{ t('download') }}</button>
+</div>
+<p class="details" aria-live="polite" id="letter-status"></p>
+
+<p class="next-steps">{{ t('next_steps') }}</p>
+{% endblock %}

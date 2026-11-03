@@ -3,6 +3,7 @@
 from datetime import date
 
 from app.data import hpd_client
+from app.i18n.dates import format_date
 from app.rules.deadlines import class_label
 from app.rules.overdue import RepairStatus, evaluate_violation
 
@@ -39,24 +40,56 @@ def check_deadlines(violations: list, today: date | None = None) -> list[dict]:
 
 
 LETTER_TEMPLATES = {
-    "en": (
-        "To the owner/manager of {address}:\n\n"
-        "I am a tenant at {address}{apt}. HPD has issued the following open violations "
-        "for this building that are past their legal correction date:\n\n"
-        "{items}\n\n"
-        "Please complete these repairs promptly. If they are not fixed, "
-        "I will file a complaint with 311/HPD.\n\n"
-        "Sincerely,\n{tenant_name}"
-    ),
-    "es": (
-        "Al propietario/administrador de {address}:\n\n"
-        "Soy inquilino/a en {address}{apt}. HPD ha emitido las siguientes violaciones abiertas "
-        "para este edificio que ya pasaron su fecha legal de corrección:\n\n"
-        "{items}\n\n"
-        "Por favor, complete estas reparaciones pronto. Si no se corrigen, "
-        "presentaré una queja ante 311/HPD.\n\n"
-        "Atentamente,\n{tenant_name}"
-    ),
+    "en": {
+        "body": (
+            "{today}\n\n"
+            "To: Owner / Managing Agent\n"
+            "Re: Open HPD violations at {address}{apt}\n\n"
+            "Dear Owner or Managing Agent,\n\n"
+            "I am a tenant at {address}{apt}. The NYC Department of Housing Preservation "
+            "and Development (HPD) has issued the following open violations for this "
+            "building, which still need to be repaired:\n\n"
+            "{items}\n\n"
+            "Please complete these repairs as soon as possible and let me know when the "
+            "work will be scheduled. If the repairs are not made, I will file a complaint "
+            "with 311 / HPD.\n\n"
+            "Sincerely,\n{tenant_name}"
+        ),
+        "item": "- {vnum}{id} (Class {cls}, {label}){apt}: {desc}. {due}",
+        "vnum": "Violation #",
+        "overdue": "Legal correction date was {date} ({n} days overdue).",
+        "due": "Must be corrected by {date}.",
+        "no_date": "Correction date not listed.",
+        "apt": ", apt. {apt}",
+        "item_apt": ", apt. {apt}",
+        "none": "- (No overdue violations selected.)",
+        "name": "[Your name]",
+    },
+    "es": {
+        "body": (
+            "{today}\n\n"
+            "Para: Propietario / Agente administrador\n"
+            "Asunto: Violaciones abiertas de HPD en {address}{apt}\n\n"
+            "Estimado propietario o agente administrador:\n\n"
+            "Soy inquilino/a en {address}{apt}. El Departamento de Preservación y "
+            "Desarrollo de la Vivienda de NYC (HPD) ha emitido las siguientes violaciones "
+            "abiertas para este edificio, que todavía deben repararse:\n\n"
+            "{items}\n\n"
+            "Por favor, complete estas reparaciones lo antes posible e infórmeme cuándo "
+            "se programará el trabajo. Si no se hacen las reparaciones, presentaré una "
+            "queja ante el 311 / HPD.\n\n"
+            "Atentamente,\n{tenant_name}"
+        ),
+        "item": "- {vnum}{id} (Clase {cls}, {label}){apt}: {desc}. {due}",
+        "vnum": "Violación n.º ",
+        "overdue": "La fecha legal de corrección fue el {date} ({n} días de retraso).",
+        "due": "Debe corregirse antes del {date}.",
+        "no_date": "Fecha de corrección no indicada.",
+        "apt": ", apto. {apt}",
+        "item_apt": ", apto. {apt}",
+        "none": "- (No se seleccionaron violaciones vencidas.)",
+        "name": "[Su nombre]",
+    },
 }
 
 
@@ -66,22 +99,50 @@ def draft_letter(
     lang: str = "en",
     apartment: str = "",
     tenant_name: str = "",
+    violation_ids: set[str] | None = None,
     today: date | None = None,
 ) -> str:
-    """Draft a landlord letter listing overdue violations. Template-based; the LLM can polish it."""
+    """Draft a landlord letter.
+
+    By default it lists only overdue violations. Pass violation_ids to list specific ones.
+    Template-based so facts are always correct; the LLM can polish wording later.
+    """
     lang = lang if lang in LETTER_TEMPLATES else "en"
+    tpl = LETTER_TEMPLATES[lang]
+    today = today or date.today()
+
     lines = []
     for v in violations:
         ev = evaluate_violation(v, today=today)
-        if ev.status != RepairStatus.OVERDUE:
+        if violation_ids is not None:
+            if v.violation_id not in violation_ids:
+                continue
+        elif ev.status != RepairStatus.OVERDUE:
             continue
-        label = class_label(v.violation_class, lang)
-        lines.append(f"- #{v.violation_id} ({label}): {v.description}")
-    items = "\n".join(lines) or "-"
-    apt = f", apt. {apartment}" if apartment else ""
-    return LETTER_TEMPLATES[lang].format(
-        address=address,
-        apt=apt,
-        items=items,
-        tenant_name=tenant_name or "[Your name]",
+
+        if ev.status == RepairStatus.OVERDUE:
+            due = tpl["overdue"].format(date=format_date(ev.deadline, lang), n=ev.days_overdue)
+        elif ev.deadline:
+            due = tpl["due"].format(date=format_date(ev.deadline, lang))
+        else:
+            due = tpl["no_date"]
+
+        lines.append(
+            tpl["item"].format(
+                vnum=tpl["vnum"],
+                id=v.violation_id,
+                cls=v.violation_class,
+                label=class_label(v.violation_class, lang),
+                apt=tpl["item_apt"].format(apt=v.apartment) if v.apartment else "",
+                desc=v.description.rstrip("."),
+                due=due,
+            )
+        )
+
+    return tpl["body"].format(
+        today=format_date(today, lang),
+        address=address or "[Building address]",
+        apt=tpl["apt"].format(apt=apartment) if apartment else "",
+        items="\n".join(lines) or tpl["none"],
+        tenant_name=tenant_name or tpl["name"],
     )
