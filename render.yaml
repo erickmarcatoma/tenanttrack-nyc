@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: tenanttrack-nyc
+    runtime: docker
+    repo: https://github.com/erickmarcatoma/tenanttrack-nyc
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: NYC_OPEN_DATA_APP_TOKEN
+        sync: false
+      - key: GEOCLIENT_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        sync: false
+      - key: SMTP_URL
+        sync: false
+      - key: SMS_API_KEY
+        sync: false
