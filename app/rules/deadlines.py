@@ -1,5 +1,6 @@
 """HPD correction periods by violation class and condition."""
 
+import re
 from datetime import date, timedelta
 
 # Days allowed to correct, counted from the date the notice of violation was issued.
@@ -16,6 +17,16 @@ CLASS_C_CONDITION_DAYS: tuple[tuple[tuple[str, ...], int], ...] = (
     (("window guard", "mold", "mice", "mouse", "cockroach", "roach", "rat"), 21),
     (("self-closing door", "self closing door", "selfclosing door"), 14),
     (("heat", "hot water"), 0),
+)
+
+# Whole-word match, allowing simple plurals and "-y" (rats, roaches, moldy).
+# Prevents false matches inside other words ("decorate" is not "rat", "heater" is not "heat").
+_CLASS_C_PATTERNS: tuple[tuple[re.Pattern[str], int], ...] = tuple(
+    (
+        re.compile(r"\b(?:" + "|".join(re.escape(p) for p in phrases) + r")(?:e?s|y)?\b"),
+        days,
+    )
+    for phrases, days in CLASS_C_CONDITION_DAYS
 )
 
 CLASS_LABELS: dict[str, dict[str, str]] = {
@@ -39,8 +50,8 @@ def deadline_for(
     days = CORRECTION_DAYS.get(normalized_class)
     if normalized_class == "C":
         normalized_description = description.casefold().replace("-", " ")
-        for phrases, condition_days in CLASS_C_CONDITION_DAYS:
-            if any(phrase in normalized_description for phrase in phrases):
+        for pattern, condition_days in _CLASS_C_PATTERNS:
+            if pattern.search(normalized_description):
                 days = condition_days
                 break
     if days is None or issued_date is None:

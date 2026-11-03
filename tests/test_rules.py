@@ -45,6 +45,36 @@ def test_class_c_condition_deadline(description, days):
     assert deadline_for("C", issued, description=description) == date(2026, 1, 1 + days)
 
 
+@pytest.mark.parametrize(
+    "description",
+    [
+        "Repair decorative molding in hallway",
+        "Separate electrical outlet is defective",
+        "Operating generator room door is broken",
+        "Replace broken water heater cover",
+        "Provide ventilation to bathroom",
+    ],
+)
+def test_class_c_keywords_do_not_match_inside_other_words(description):
+    # These are "other" Class C violations, so they keep the 24-hour default.
+    assert deadline_for("C", date(2026, 1, 1), description=description) == date(2026, 1, 2)
+
+
+@pytest.mark.parametrize(
+    ("description", "days"),
+    [
+        ("Rats in basement", 21),
+        ("Roaches in apartment", 21),
+        ("Moldy ceiling in bathroom", 21),
+        ("Install approved window guards", 21),
+        ("No heat. Provide heat", 0),
+    ],
+)
+def test_class_c_keywords_match_plurals_and_variants(description, days):
+    issued = date(2026, 1, 1)
+    assert deadline_for("C", issued, description=description) == date(2026, 1, 1 + days)
+
+
 def test_class_c_condition_deadline_is_used_by_violation_evaluation():
     violation = Violation(
         violation_id="1",
