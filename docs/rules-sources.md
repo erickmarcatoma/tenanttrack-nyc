@@ -50,3 +50,40 @@ available. Always prefer the record-specific correction-by date when present.
   source dataset for record-level violation and correction-by dates.
 - [HPD: Heat and Hot Water Information](https://www.nyc.gov/site/hpd/services-and-information/heat-and-hot-water-information.page) —
   background on the heat and hot-water requirements.
+
+## Live data spot-check
+
+Checked November 2, 2026 against the public HPD Housing Maintenance Code
+Violations dataset. The three reports were loaded locally by BIN. For each
+building, the five most recently issued open violations with an issue date
+were selected. The app's `parse_violations` and `evaluate_violation` functions
+were used; the expected deadline is the dataset's `newcorrectbydate`, falling
+back to `originalcorrectbydate`, and status is evaluated as of November 2,
+2026. All 15 app deadlines matched the dataset correction-by dates.
+
+| Building | Violation ID | Class | Issued | HPD correct-by | App status | Match |
+| --- | ---: | :---: | --- | --- | --- | :---: |
+| 765 Lincoln Avenue, Brooklyn | 19305476 | C | 2026-10-19 | 2026-10-25 | Overdue | Yes |
+| 765 Lincoln Avenue, Brooklyn | 19305477 | C | 2026-10-19 | 2026-10-25 | Overdue | Yes |
+| 765 Lincoln Avenue, Brooklyn | 19305478 | C | 2026-10-19 | 2026-11-14 | On time | Yes |
+| 765 Lincoln Avenue, Brooklyn | 19305479 | B | 2026-10-19 | 2026-11-23 | On time | Yes |
+| 765 Lincoln Avenue, Brooklyn | 19305480 | B | 2026-10-19 | 2026-11-23 | On time | Yes |
+| 1055 Bergen Street, Brooklyn | 19300156 | A | 2026-10-16 | 2027-01-19 | On time | Yes |
+| 1055 Bergen Street, Brooklyn | 19300155 | A | 2026-10-16 | 2027-01-19 | On time | Yes |
+| 1055 Bergen Street, Brooklyn | 19300154 | A | 2026-10-16 | 2027-01-19 | On time | Yes |
+| 1055 Bergen Street, Brooklyn | 19300153 | B | 2026-10-16 | 2026-11-20 | On time | Yes |
+| 1055 Bergen Street, Brooklyn | 19300157 | B | 2026-10-16 | 2026-11-20 | On time | Yes |
+| 530 East 169 Street, Bronx | 19331362 | C | 2026-10-28 | 2026-11-11 | On time | Yes |
+| 530 East 169 Street, Bronx | 19331363 | C | 2026-10-28 | 2026-11-03 | Due soon | Yes |
+| 530 East 169 Street, Bronx | 19331361 | C | 2026-10-28 | 2026-11-03 | Due soon | Yes |
+| 530 East 169 Street, Bronx | 19331360 | C | 2026-10-28 | 2026-10-28 | Overdue | Yes |
+| 530 East 169 Street, Bronx | 19330320 | B | 2026-10-27 | 2026-12-01 | On time | Yes |
+
+The local report pages returned HTTP 200 for all three BINs. The public dataset
+request returned HTTP 200 with the configured NYC Open Data token. Address
+lookups initially failed because the app used the retired
+`/geo/geoclient/v2` endpoint; the supported endpoint is
+`/geoclient/v2`. After correcting the default URL, Geoclient returned matches
+for all three addresses. This spot-check verifies that the app honors HPD's
+record-level dates and classifies status against them; it does not
+independently validate HPD's underlying correction-period calculation.

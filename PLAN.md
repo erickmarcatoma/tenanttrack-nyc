@@ -40,10 +40,10 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Add a test for each special case in `tests/test_rules.py`
 
 **Day 3: Check against real data**
-- [ ] Get an Open Data app token and a Geoclient key, then put them in `.env`
-- [ ] Run the app locally and look up 3 real buildings
-- [ ] Hand-check 15 violations: does the app's status match the dataset's correct-by date?
-- [ ] Write the results as a table in `docs/rules-sources.md`
+- [x] Get an Open Data app token and a Geoclient key, then put them in `.env`
+- [x] Run the app locally and look up 3 real buildings
+- [x] Hand-check 15 violations: does the app's status match the dataset's correct-by date?
+- [x] Write the results as a table in `docs/rules-sources.md`
 
 **Day 4: Fix and merge**
 - [ ] Fix any mismatches found on Day 3
