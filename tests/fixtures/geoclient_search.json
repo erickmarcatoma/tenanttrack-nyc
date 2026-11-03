@@ -1,0 +1,17 @@
+{
+  "status": "EXACT_MATCH",
+  "results": [
+    {
+      "level": "1",
+      "status": "EXACT_MATCH",
+      "request": "address [houseNumber=123, street=SAMPLE STREET, borough=BROOKLYN]",
+      "response": {
+        "houseNumber": "123",
+        "firstStreetNameNormalized": "SAMPLE STREET",
+        "firstBoroughName": "BROOKLYN",
+        "bbl": "3012340001",
+        "buildingIdentificationNumber": "3000001"
+      }
+    }
+  ]
+}

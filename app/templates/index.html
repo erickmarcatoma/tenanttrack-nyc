@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('app_name') }}</h1>
+<p class="lead">{{ t('tagline') }}</p>
+
+{% if error %}
+<p class="error" role="alert">{{ t('not_found') }}</p>
+{% endif %}
+
+<form class="search" action="/search" method="get">
+  <input type="hidden" name="lang" value="{{ lang }}">
+  <label for="address">{{ t('address_label') }}</label>
+  <input id="address" name="address" type="text" required minlength="3" maxlength="200"
+         autocomplete="street-address" placeholder="{{ t('address_placeholder') }}">
+  <button type="submit">{{ t('search_button') }}</button>
+</form>
+{% endblock %}

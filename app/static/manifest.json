@@ -1,0 +1,11 @@
+{
+  "name": "TenantTrack NYC",
+  "short_name": "TenantTrack",
+  "description": "See open repairs in your NYC building and what you can do about them.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f4e79",
+  "icons": []
+}

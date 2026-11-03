@@ -1,0 +1,22 @@
+{
+  "app_name": "TenantTrack NYC",
+  "tagline": "See open repairs in your building and what you can do about them.",
+  "address_label": "Your NYC address",
+  "address_placeholder": "e.g. 123 Main St, Brooklyn",
+  "search_button": "Check my building",
+  "switch_language": "Español",
+  "report_title": "Building report",
+  "open_violations": "Open HPD violations",
+  "complaints_311": "Recent 311 housing complaints",
+  "no_violations": "No open violations found.",
+  "no_complaints": "No recent complaints found.",
+  "status_overdue": "Overdue",
+  "status_due_soon": "Due soon",
+  "status_on_time": "On time",
+  "status_closed": "Closed",
+  "class": "Class",
+  "correct_by": "Fix by",
+  "draft_letter": "Draft a letter",
+  "not_found": "We couldn't find that address. Try adding the borough.",
+  "disclaimer": "Not affiliated with NYC, HPD, or 311. This is not legal advice."
+}
