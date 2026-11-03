@@ -35,9 +35,9 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Save source links in `docs/rules-sources.md`
 
 **Day 2: Update the rules engine**
-- [ ] Update `CORRECTION_DAYS` in `app/rules/deadlines.py` and add a source comment
-- [ ] Add special-case handling if any differ from the class default
-- [ ] Add a test for each special case in `tests/test_rules.py`
+- [x] Update `CORRECTION_DAYS` in `app/rules/deadlines.py` and add a source comment
+- [x] Add special-case handling if any differ from the class default
+- [x] Add a test for each special case in `tests/test_rules.py`
 
 **Day 3: Check against real data**
 - [ ] Get an Open Data app token and a Geoclient key, then put them in `.env`

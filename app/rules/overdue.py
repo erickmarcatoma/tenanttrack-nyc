@@ -30,9 +30,10 @@ def evaluate(
     correct_by: date | None = None,
     is_open: bool = True,
     today: date | None = None,
+    description: str = "",
 ) -> Evaluation:
     today = today or date.today()
-    deadline = deadline_for(violation_class, issued_date, correct_by)
+    deadline = deadline_for(violation_class, issued_date, correct_by, description)
 
     if not is_open:
         return Evaluation(RepairStatus.CLOSED, deadline)
@@ -53,4 +54,5 @@ def evaluate_violation(violation, today: date | None = None) -> Evaluation:
         violation.correct_by,
         is_open=violation.status.lower() == "open",
         today=today,
+        description=violation.description,
     )

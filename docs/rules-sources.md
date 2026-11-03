@@ -35,6 +35,12 @@ not capture HPD's listed Class C exceptions. In particular, lead paint,
 window guards, mold, pests, self-closing doors, and heat/hot-water conditions
 need distinct treatment if no record-specific correction-by date is available.
 
+The class-based fallback uses the violation's issue date as an estimate; HPD
+measures the period from when the owner receives the notice, a date not
+available to this calculation. The immediate heat/hot-water period is
+represented by the issue date (zero additional days) when no dataset date is
+available. Always prefer the record-specific correction-by date when present.
+
 ## Sources
 
 - [HPD: Report a Quality or Safety Issue](https://www.nyc.gov/site/hpd/services-and-information/report-a-maintenance-issue.page) —
