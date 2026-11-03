@@ -14,7 +14,14 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="/?lang={{ lang }}">{{ t('app_name') }}</a>
+    <a class="brand" href="/?lang={{ lang }}">
+      <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M3 11 12 4l9 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5 10v10h14V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <span>{{ t('app_name') }}</span>
+    </a>
     {% set other = 'es' if lang == 'en' else 'en' %}
     <a class="lang-switch" href="{{ request.url.include_query_params(lang=other) }}" lang="{{ other }}">{{ t('switch_language') }}</a>
   </header>

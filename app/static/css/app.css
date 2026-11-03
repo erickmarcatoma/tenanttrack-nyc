@@ -1,12 +1,18 @@
+/* All text/background pairs below meet WCAG 2.1 AA (4.5:1). */
 :root {
   --text: #1a1a1a;
   --muted: #555;
   --bg: #fff;
+  --surface: #f5f7fa;
   --accent: #1f4e79;
   --overdue: #a4161a;
+  --overdue-bg: #fbe9e9;
   --due-soon: #8a5300;
+  --due-soon-bg: #fdf0dc;
   --ok: #2b6a2f;
-  --border: #ccc;
+  --ok-bg: #e6f2e6;
+  --border: #d0d5dc;
+  --focus: #ffbf47;
 }
 
 * { box-sizing: border-box; }
@@ -20,39 +26,87 @@ body {
   background: var(--bg);
 }
 
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
 .skip-link { position: absolute; left: -999px; }
 .skip-link:focus { left: 1rem; top: 1rem; background: #fff; padding: .5rem; z-index: 10; }
 
+/* Header */
 .site-header {
   display: flex; justify-content: space-between; align-items: center;
   padding: .75rem 1rem; background: var(--accent);
 }
 .site-header a { color: #fff; text-decoration: none; font-weight: 600; }
-.site-header a:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+.brand { display: flex; align-items: center; gap: .5rem; font-size: 1.125rem; }
+.brand-icon { width: 28px; height: 28px; }
 
-main { max-width: 42rem; margin: 0 auto; padding: 1rem; }
-
-.search { display: flex; flex-direction: column; gap: .5rem; }
-.search input { font-size: 1rem; padding: .75rem; border: 2px solid var(--border); border-radius: 6px; }
-.search button {
-  font-size: 1rem; padding: .75rem; border: 0; border-radius: 6px;
-  background: var(--accent); color: #fff; font-weight: 600; min-height: 44px;
-}
-:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
-
+/* Layout: bottom padding leaves room for a floating chat button. */
+main { max-width: 42rem; margin: 0 auto; padding: 1rem 1rem 6rem; }
+h1 { font-size: 1.75rem; line-height: 1.2; margin: .25rem 0 .5rem; }
+h2 { font-size: 1.25rem; margin: 1.5rem 0 .75rem; }
+.lead { font-size: 1.125rem; }
+.eyebrow { margin: 0; color: var(--muted); font-weight: 600; font-size: .875rem; text-transform: uppercase; letter-spacing: .03em; }
 .error { color: var(--overdue); font-weight: 600; }
-.meta { color: var(--muted); }
+.details { color: var(--muted); font-size: .9375rem; margin: .25rem 0; }
 
+/* Forms and buttons */
+.search, .letter-form { display: flex; flex-direction: column; gap: .5rem; }
+label { font-weight: 600; }
+input, textarea {
+  font: inherit; font-size: 1rem; padding: .75rem;
+  border: 2px solid var(--border); border-radius: 6px; width: 100%;
+}
+button, .button {
+  display: inline-flex; justify-content: center; align-items: center;
+  font: inherit; font-size: 1rem; font-weight: 600; min-height: 44px;
+  padding: .75rem 1rem; border: 0; border-radius: 6px; cursor: pointer;
+  background: var(--accent); color: #fff; text-decoration: none;
+}
+button.secondary { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+
+/* Summary banner */
+.summary { border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+.summary h2 { margin: 0 0 .25rem; }
+.summary p { margin: 0 0 .75rem; }
+.summary-overdue { background: var(--overdue-bg); color: var(--overdue); }
+.summary-overdue p { color: var(--text); }
+.summary-ok { background: var(--ok-bg); color: var(--ok); }
+.summary-ok p { color: var(--text); margin: 0; }
+
+/* Violation cards */
 .cards { list-style: none; padding: 0; display: grid; gap: .75rem; }
-.card { border: 1px solid var(--border); border-left: 6px solid var(--border); border-radius: 6px; padding: .75rem; }
-.card p { margin: .25rem 0; }
-.card .badge { font-weight: 700; font-size: .875rem; text-transform: uppercase; }
+.card {
+  border: 1px solid var(--border); border-left: 6px solid var(--border);
+  border-radius: 6px; padding: .75rem;
+}
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; }
+.card .desc { margin: 0; font-weight: 600; }
+.badge {
+  flex-shrink: 0; font-weight: 700; font-size: .8125rem; text-transform: uppercase;
+  padding: .125rem .5rem; border-radius: 999px;
+}
+.card-action { display: inline-block; margin-top: .5rem; font-weight: 600; min-height: 24px; }
 .status-overdue { border-left-color: var(--overdue); }
-.status-overdue .badge { color: var(--overdue); }
+.status-overdue .badge { color: var(--overdue); background: var(--overdue-bg); }
 .status-due_soon { border-left-color: var(--due-soon); }
-.status-due_soon .badge { color: var(--due-soon); }
+.status-due_soon .badge { color: var(--due-soon); background: var(--due-soon-bg); }
 .status-on_time { border-left-color: var(--ok); }
-.status-on_time .badge { color: var(--ok); }
-.details { color: var(--muted); font-size: .9375rem; }
+.status-on_time .badge { color: var(--ok); background: var(--ok-bg); }
 
-.site-footer { max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: var(--muted); font-size: .875rem; }
+/* 311 list */
+.list { list-style: none; padding: 0; margin: 0; }
+.list li { padding: .75rem 0; border-bottom: 1px solid var(--border); }
+.list-title { display: block; font-weight: 600; }
+
+.ids { margin-top: 2rem; color: var(--muted); font-size: .9375rem; }
+
+/* Letter page */
+.letter-form { margin: 1rem 0 1.5rem; padding: 1rem; background: var(--surface); border-radius: 8px; }
+.letter-label { display: block; margin-bottom: .5rem; }
+textarea { font-family: inherit; line-height: 1.5; resize: vertical; }
+.letter-actions { display: flex; gap: .5rem; margin-top: .75rem; }
+.letter-actions button { flex: 1; }
+.next-steps { margin-top: 1.5rem; padding: 1rem; background: var(--surface); border-radius: 8px; }
+
+.site-footer { max-width: 42rem; margin: 0 auto 2rem; padding: 0 1rem; color: var(--muted); font-size: .875rem; }
