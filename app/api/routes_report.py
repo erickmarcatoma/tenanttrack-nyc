@@ -10,6 +10,7 @@ from app.agent.tools import draft_letter
 from app.api import templates
 from app.data import hpd_client, nyc311_client
 from app.i18n import normalize, translator
+from app.logging_config import log_upstream_error
 from app.rules.deadlines import class_label
 from app.rules.overdue import RepairStatus, evaluate_violation
 
@@ -23,7 +24,9 @@ async def _violations(bin_: str):
     try:
         return await hpd_client.get_open_violations(bin_)
     except Exception as exc:
-        log.exception("HPD request failed")
+        log_upstream_error(
+            log, hpd_client.DATASET_NAME, exc, dataset_id=hpd_client.DATASET_ID
+        )
         raise HTTPException(status_code=502, detail="NYC Open Data is unavailable") from exc
 
 
@@ -56,8 +59,10 @@ async def building_report(
     if bbl:
         try:
             complaints = await nyc311_client.get_recent_complaints(bbl)
-        except Exception:
-            log.exception("311 request failed")
+        except Exception as exc:
+            log_upstream_error(
+                log, nyc311_client.DATASET_NAME, exc, dataset_id=nyc311_client.DATASET_ID
+            )
 
     rows = []
     for v in violations:
