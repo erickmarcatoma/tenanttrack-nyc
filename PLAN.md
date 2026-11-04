@@ -15,7 +15,7 @@ Solo hobby build. **1 day = one work session of about 2 hours.** At 5 sessions a
 
 | Branch | Days | Status |
 | --- | --- | --- |
-| `feat/rules-verify` | 1–4 | ✅ Merged (delete branch) |
+| `feat/rules-verify` | 1–4 | ✅ Merged and deleted |
 | `chore/deploy` | 5–7 | 🟡 Live; PR to merge |
 | `docs/research-and-audit` | 8 | ⬜ |
 | `feat/observability` | 9–11 | ⬜ |
@@ -66,7 +66,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Check the rules coverage: `pytest --cov=app/rules` (target ≥ 90%; achieved 100%)
 - [x] Fix Class C keyword matching to use whole words (e.g. "decorate" ≠ "rat")
 - [x] Open a PR → green CI → merge ([PR #1](https://github.com/erickmarcatoma/tenanttrack-nyc/pull/1))
-- [ ] Delete the `feat/rules-verify` branch
+- [x] Delete the `feat/rules-verify` branch
 
 ✅ **Done when:** deadlines match HPD's rules and are backed by sources.
 
