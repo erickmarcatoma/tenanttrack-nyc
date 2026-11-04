@@ -11,12 +11,12 @@ Solo hobby build. **1 day = one work session of about 2 hours.** At 5 sessions a
 
 ## Progress
 
-**Days done: 6 of 40** · Current: **Day 7** (merge `chore/deploy`) · Next: **Day 8** (start recruiting tenants)
+**Days done: 7 of 40** · Current: **Day 8** (start recruiting tenants) · Next: **Day 9** (`feat/observability`)
 
 | Branch | Days | Status |
 | --- | --- | --- |
 | `feat/rules-verify` | 1–4 | ✅ Merged and deleted |
-| `chore/deploy` | 5–7 | 🟡 Live; PR to merge |
+| `chore/deploy` | 5–7 | ✅ Live and merged (delete branch) |
 | `docs/research-and-audit` | 8 | ⬜ |
 | `feat/observability` | 9–11 | ⬜ |
 | `feat/ai-agent` | 12–19 | ⬜ |
@@ -86,7 +86,8 @@ Already done on `main`: project scaffold, search page, building report, letter p
 **Day 7: Document and merge**
 - [x] Add the live URL to the top of `README.md`
 - [x] Update `docs/runbook.md` with the real deploy and rollback steps
-- [ ] PR → merge → delete the branch
+- [x] PR → green CI → merge ([PR #2](https://github.com/erickmarcatoma/tenanttrack-nyc/pull/2))
+- [ ] Delete the `chore/deploy` branch
 
 ✅ **Done when:** a public link works on your phone.
 
