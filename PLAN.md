@@ -9,6 +9,22 @@ Solo hobby build. **1 day = one work session of about 2 hours.** At 5 sessions a
 3. Tick the boxes as you go. End each day with a commit and push.
 4. On the branch's last day, open a PR, wait for green CI, merge, and delete the branch.
 
+## Progress
+
+**Days done: 6 of 40** · Current: **Day 7** (merge `chore/deploy`) · Next: **Day 8** (start recruiting tenants)
+
+| Branch | Days | Status |
+| --- | --- | --- |
+| `feat/rules-verify` | 1–4 | ✅ Merged (delete branch) |
+| `chore/deploy` | 5–7 | 🟡 Live; PR to merge |
+| `docs/research-and-audit` | 8 | ⬜ |
+| `feat/observability` | 9–11 | ⬜ |
+| `feat/ai-agent` | 12–19 | ⬜ |
+| `feat/chat-ui` | 20–24 | ⬜ |
+| `feat/alerts` | 25–30 | ⬜ |
+| `feat/offline-pwa` | 31–33 | ⬜ |
+| `docs/research-and-audit` | 34–40 | ⬜ |
+
 Already done on `main`: project scaffold, search page, building report, letter page, rules engine (with draft deadlines), CI, and docs templates.
 
 ## Overview
@@ -48,7 +64,9 @@ Already done on `main`: project scaffold, search page, building report, letter p
 **Day 4: Fix and merge**
 - [x] Check Day 3 results for mismatches (none found)
 - [x] Check the rules coverage: `pytest --cov=app/rules` (target ≥ 90%; achieved 100%)
-- [ ] Open a PR → green CI → merge → delete the branch
+- [x] Fix Class C keyword matching to use whole words (e.g. "decorate" ≠ "rat")
+- [x] Open a PR → green CI → merge ([PR #1](https://github.com/erickmarcatoma/tenanttrack-nyc/pull/1))
+- [ ] Delete the `feat/rules-verify` branch
 
 ✅ **Done when:** deadlines match HPD's rules and are backed by sources.
 
@@ -61,9 +79,9 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Add `NYC_OPEN_DATA_APP_TOKEN` and `GEOCLIENT_API_KEY` to Vercel Production and redeploy
 
 **Day 6: Make it reliable**
-- [ ] Set the health check to `/healthz`
-- [ ] Turn on auto-deploy when `main` changes
-- [ ] Test on your phone over mobile data: search → report → letter
+- [x] Health check: `/healthz` exists (Vercel has no health-check setting; the uptime monitor on Day 10 will ping it)
+- [x] Auto-deploy when `main` changes (on by default with Vercel's GitHub integration)
+- [x] Test on your phone over mobile data: search → report → letter
 
 **Day 7: Document and merge**
 - [x] Add the live URL to the top of `README.md`
