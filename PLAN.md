@@ -96,10 +96,9 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Week 2: `docs/research-and-audit` (part 1)
 
 **Day 8: Start recruiting early**
-- [x] List 5–10 tenant associations, legal-aid clinics, or community groups
+- [ ] List 5–10 tenant associations, legal-aid clinics, or community groups
 - [ ] Send a short message asking for 5 tenants for 30-minute interviews
-- [x] Finalize the interview guide in `docs/user-research.md`
-- [x] Run five clearly labeled synthetic practice interviews; do not count as tenant research
+- [ ] Finalize the interview guide in `docs/user-research.md`
 - [ ] Commit and push (don't merge yet; you'll come back to this branch)
 
 ✅ **Done when:** outreach is sent.
