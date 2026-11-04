@@ -109,8 +109,8 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Weeks 2–3: `feat/observability`
 
 **Day 9: Structured logging**
-- [ ] Switch to JSON logs (one line per request: path, status, duration)
-- [ ] Log Open Data and Geoclient errors with the dataset name and status code
+- [x] Switch to JSON logs (one line per request: path, status, duration)
+- [x] Log Open Data and Geoclient errors with the dataset name and status code
 
 **Day 10: Error tracking and uptime**
 - [ ] Add free error tracking (e.g. Sentry) and set `SENTRY_DSN` in the host
