@@ -100,7 +100,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [ ] Send a short message asking for 5 tenants for 30-minute interviews
 - [x] Finalize the interview guide in `docs/user-research.md`
 - [x] Run five clearly labeled synthetic practice interviews; do not count as tenant research
-- [ ] Commit and push (don't merge yet; you'll come back to this branch)
+- [x] Commit and push (don't merge yet; you'll come back to this branch)
 
 ✅ **Done when:** outreach is sent.
 
