@@ -9,6 +9,7 @@ from app.config import get_settings
 from app.data.cache import cache
 
 DATASET_ID = "erm2-nwe9"
+DATASET_NAME = "311 Service Requests"
 
 
 @dataclass

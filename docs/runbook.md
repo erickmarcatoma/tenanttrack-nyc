@@ -27,6 +27,25 @@ Health check: `GET /healthz` returns `{"status": "ok"}`.
 
 In the Vercel project dashboard, promote a previous healthy deployment. If the issue came from a code change, revert that change on the production branch and redeploy.
 
+## Alerts and dashboards
+
+### Sentry
+
+The app initializes Sentry only when `SENTRY_DSN` is configured. Create a Python project in Sentry, copy its DSN into the Vercel project's `SENTRY_DSN` environment variable for Production, then redeploy. Do not commit the DSN. Error events omit query strings, request data, headers, cookies, user data, and breadcrumbs to avoid collecting tenant addresses or contact details. If the DSN is unset, error reporting is disabled.
+
+To verify a deployment, use Sentry's **Send a test event** option or a controlled test event in a non-production environment, then confirm the event appears in the project's **Issues** view. Do not trigger an intentional production exception on a tenant-facing route. A local test event only verifies the local `.env` configuration; it does not verify production.
+
+### UptimeRobot
+
+Create an HTTPS monitor in UptimeRobot with:
+
+- **Monitor type:** HTTP(s)
+- **URL:** `https://tenanttrack-nyc.vercel.app/healthz`
+- **Monitoring interval:** 5 minutes
+- **Alert contact:** a contact method you control
+
+Save the monitor, verify that it reports the endpoint as up, and use UptimeRobot's **Test Notification** action to confirm notifications reach your contact. The `/healthz` route reports application availability; it does not check NYC APIs or database dependencies.
+
 ## Common incidents
 
 | Symptom | Likely cause | Action |
@@ -35,3 +54,4 @@ In the Vercel project dashboard, promote a previous healthy deployment. If the i
 | Every search says "not found" | Geoclient key missing or expired | Check `GEOCLIENT_API_KEY` |
 | Assistant returns 501 | `LLM_API_KEY` missing | Set the key |
 | No alerts sent | Cron job failing or SMTP/SMS not set | Check the "Daily alerts" workflow logs |
+| No application errors appear in Sentry | `SENTRY_DSN` is missing, invalid, or the deployment predates its configuration | Check the Vercel Production environment variable, redeploy, then verify with a non-production test event |

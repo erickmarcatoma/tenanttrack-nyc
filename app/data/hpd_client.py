@@ -9,6 +9,7 @@ from app.config import get_settings
 from app.data.cache import cache
 
 DATASET_ID = "wvxf-dwi5"
+DATASET_NAME = "HPD Housing Maintenance Code Violations"
 
 
 @dataclass
