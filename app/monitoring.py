@@ -29,8 +29,8 @@ def init_sentry(dsn: str) -> bool:
     sentry_sdk.init(
         dsn=dsn,
         integrations=[FastApiIntegration()],
-        send_default_pii=False,
         traces_sample_rate=0,
+        data_collection={"user_info": False},
         before_send=before_send,
         before_breadcrumb=lambda breadcrumb, hint: None,
         max_breadcrumbs=0,
