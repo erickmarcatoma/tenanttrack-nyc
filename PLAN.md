@@ -115,7 +115,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 **Day 10: Error tracking and uptime**
 - [x] Add optional Sentry error monitoring with sensitive request data removed
 - [ ] Set `SENTRY_DSN` in the host and verify a test error appears
-- [ ] Add an uptime monitor (e.g. UptimeRobot) pinging `/healthz` every 5 minutes
+- [x] Add an UptimeRobot monitor for `/healthz` every 5 minutes and confirm a test notification
 
 **Day 11: Document and merge**
 - [ ] Add an "Alerts and dashboards" section to `docs/runbook.md`
