@@ -113,7 +113,8 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Log Open Data and Geoclient errors with the dataset name and status code
 
 **Day 10: Error tracking and uptime**
-- [ ] Add free error tracking (e.g. Sentry) and set `SENTRY_DSN` in the host
+- [x] Add optional Sentry error monitoring with sensitive request data removed
+- [ ] Set `SENTRY_DSN` in the host and verify a test error appears
 - [ ] Add an uptime monitor (e.g. UptimeRobot) pinging `/healthz` every 5 minutes
 
 **Day 11: Document and merge**
