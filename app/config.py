@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     log_level: str = "INFO"
+    sentry_dsn: str = ""
 
     nyc_open_data_app_token: str = ""
     nyc_open_data_base_url: str = "https://data.cityofnewyork.us/resource"

@@ -13,11 +13,13 @@ from starlette.responses import Response
 from app.api import routes_agent, routes_alerts, routes_report, routes_search
 from app.config import get_settings
 from app.logging_config import configure_logging
+from app.monitoring import init_sentry
 
 BASE_DIR = Path(__file__).parent
 
 settings = get_settings()
 configure_logging(settings.log_level)
+init_sentry(settings.sentry_dsn)
 
 app = FastAPI(title="TenantTrack NYC", version="0.1.0")
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")

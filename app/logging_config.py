@@ -5,6 +5,8 @@ import logging
 from datetime import UTC, datetime
 from typing import Any
 
+import sentry_sdk
+
 
 class JsonLogFormatter(logging.Formatter):
     """Render application log records as one JSON object per line."""
@@ -54,6 +56,7 @@ def log_upstream_error(
 ) -> None:
     response = getattr(error, "response", None)
     status_code = getattr(response, "status_code", None)
+    sentry_sdk.capture_exception(error)
     logger.error(
         "Upstream request failed",
         extra={
