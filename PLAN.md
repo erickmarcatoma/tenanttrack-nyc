@@ -114,13 +114,14 @@ Already done on `main`: project scaffold, search page, building report, letter p
 
 **Day 10: Error tracking and uptime**
 - [x] Add optional Sentry error monitoring with sensitive request data removed
-- [ ] Set `SENTRY_DSN` in the host and verify a test error appears
+- [x] Set `SENTRY_DSN` in the host and verify a local test event appears
 - [x] Add an UptimeRobot monitor for `/healthz` every 5 minutes and confirm a test notification
 
 **Day 11: Document and merge**
-- [ ] Add an "Alerts and dashboards" section to `docs/runbook.md`
-- [ ] Trigger a test error and confirm it shows up
-- [ ] PR → merge → delete the branch
+- [x] Add an "Alerts and dashboards" section to `docs/runbook.md`
+- [ ] After deployment, verify a production Sentry test event appears
+- [ ] Open a PR; merge after required CI checks pass
+- [ ] Delete the branch after merge
 
 ✅ **Done when:** you'd hear about an outage before a user tells you.
 
