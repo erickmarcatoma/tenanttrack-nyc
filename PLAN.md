@@ -120,7 +120,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 **Day 11: Document and merge**
 - [x] Add an "Alerts and dashboards" section to `docs/runbook.md`
 - [ ] After deployment, verify a production Sentry test event appears
-- [x] Open a PR; merge after required CI checks pass
+- [ ] Open a PR; merge after required CI checks pass
 - [ ] Delete the branch after merge
 
 ✅ **Done when:** you'd hear about an outage before a user tells you.
