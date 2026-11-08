@@ -130,9 +130,10 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Weeks 3–4: `feat/ai-agent`
 
 **Day 12: Pick the LLM**
-- [ ] Choose an LLM API that supports tool calling
-- [ ] Add `LLM_API_KEY` and `LLM_MODEL` to `.env` and the host
-- [ ] Make one simple API call from a script to confirm it works
+- [x] Choose the OpenAI Responses API with function-calling support
+- [x] Set the example model to `gpt-5.4-mini` and document local/host configuration
+- [ ] Add `LLM_API_KEY` and `LLM_MODEL` to local `.env` and the host
+- [ ] Make one simple API call with `py -m app.llm_smoke_test` to confirm credentials work
 
 **Day 13: Tool definitions**
 - [ ] Write the JSON schema for `lookup_violations`, `check_deadlines`, and `draft_letter`
