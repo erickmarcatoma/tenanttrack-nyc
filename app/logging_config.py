@@ -20,6 +20,8 @@ class JsonLogFormatter(logging.Formatter):
         "dataset",
         "dataset_id",
         "error_type",
+        "tool_name",
+        "step",
     )
 
     def format(self, record: logging.LogRecord) -> str:

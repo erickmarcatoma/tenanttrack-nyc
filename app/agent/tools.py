@@ -1,6 +1,8 @@
 """Tools the AI agent can call. Facts come from data clients and the rules engine, not the LLM."""
 
+import re
 from datetime import date
+from typing import Any
 
 from app.data import hpd_client
 from app.i18n.dates import format_date
@@ -8,8 +10,14 @@ from app.rules.deadlines import class_label
 from app.rules.overdue import RepairStatus, evaluate_violation
 
 
-async def lookup_violations(bin_: str) -> list[dict]:
-    violations = await hpd_client.get_open_violations(bin_)
+def _validate_bin(bin_: str) -> None:
+    if not re.fullmatch(r"\d{7}", bin_):
+        raise ValueError("BIN must be exactly 7 digits.")
+
+
+async def lookup_violations(bin: str) -> list[dict]:
+    _validate_bin(bin)
+    violations = await hpd_client.get_open_violations(bin)
     return [
         {
             "id": v.violation_id,
@@ -23,8 +31,10 @@ async def lookup_violations(bin_: str) -> list[dict]:
     ]
 
 
-def check_deadlines(violations: list, today: date | None = None) -> list[dict]:
-    """Run the rules engine over hpd_client.Violation objects."""
+async def check_deadlines(bin: str, today: date | None = None) -> list[dict]:
+    """Fetch open violations for a BIN and evaluate their repair deadlines."""
+    _validate_bin(bin)
+    violations = await hpd_client.get_open_violations(bin)
     results = []
     for v in violations:
         ev = evaluate_violation(v, today=today)
@@ -37,6 +47,109 @@ def check_deadlines(violations: list, today: date | None = None) -> list[dict]:
             }
         )
     return results
+
+
+async def draft_letter_for_building(
+    bin: str,
+    address: str = "",
+    lang: str = "en",
+    apartment: str = "",
+    tenant_name: str = "",
+    violation_ids: list[str] | None = None,
+) -> str:
+    """Fetch building violations and draft a letter using only HPD facts."""
+    _validate_bin(bin)
+    violations = await hpd_client.get_open_violations(bin)
+    return draft_letter(
+        address=address,
+        violations=violations,
+        lang=lang,
+        apartment=apartment,
+        tenant_name=tenant_name,
+        violation_ids=set(violation_ids) if violation_ids is not None else None,
+    )
+
+
+TOOL_DEFINITIONS: list[dict[str, Any]] = [
+    {
+        "name": "lookup_violations",
+        "description": "Look up open HPD housing violations for a NYC building.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "bin": {
+                    "type": "STRING",
+                    "description": (
+                        "The building's 7-digit NYC Building Identification Number (BIN)."
+                    ),
+                }
+            },
+            "required": ["bin"],
+        },
+    },
+    {
+        "name": "check_deadlines",
+        "description": (
+            "Fetch open HPD violations for a building and evaluate their repair deadlines."
+        ),
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "bin": {
+                    "type": "STRING",
+                    "description": (
+                        "The building's 7-digit NYC Building Identification Number (BIN)."
+                    ),
+                }
+            },
+            "required": ["bin"],
+        },
+    },
+    {
+        "name": "draft_letter",
+        "description": (
+            "Draft a tenant letter about open HPD violations. Include only selected "
+            "violation IDs when provided; otherwise include overdue violations."
+        ),
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "bin": {
+                    "type": "STRING",
+                    "description": (
+                        "The building's 7-digit NYC Building Identification Number (BIN)."
+                    ),
+                },
+                "address": {
+                    "type": "STRING",
+                    "description": "Building street address, if known.",
+                },
+                "lang": {
+                    "type": "STRING",
+                    "enum": ["en", "es"],
+                    "description": "Letter language.",
+                },
+                "apartment": {
+                    "type": "STRING",
+                    "description": "Tenant's apartment number, if provided.",
+                },
+                "tenant_name": {
+                    "type": "STRING",
+                    "description": "Tenant's name, if provided.",
+                },
+                "violation_ids": {
+                    "type": "ARRAY",
+                    "items": {"type": "STRING"},
+                    "description": (
+                        "Optional HPD violation IDs to include. Omit to include overdue "
+                        "violations."
+                    ),
+                },
+            },
+            "required": ["bin"],
+        },
+    },
+]
 
 
 LETTER_TEMPLATES = {

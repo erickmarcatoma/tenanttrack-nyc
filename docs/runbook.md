@@ -15,7 +15,11 @@ Health check: `GET /healthz` returns `{"status": "ok"}`.
 - Merges to `main` run CI (lint, tests, accessibility).
 - Production URL: https://tenanttrack-nyc.vercel.app/
 - Hosting: Vercel, connected to the GitHub repository. The deployment's `/healthz` endpoint has been verified.
-- Set required environment variables in the Vercel project settings: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, and `LLM_API_KEY`. Optional variables: `LLM_MODEL`, `SMTP_URL`, `SMS_API_KEY`.
+- Set required environment variables in the Vercel project settings: `NYC_OPEN_DATA_APP_TOKEN`, `GEOCLIENT_API_KEY`, `DATABASE_URL`, and `LLM_API_KEY`. Set `LLM_MODEL` to `gemini-3.5-flash-lite` for the Gemini API integration. Other optional variables: `SMTP_URL`, `SMS_API_KEY`.
+
+### Gemini API smoke test
+
+Create a key in [Google AI Studio](https://aistudio.google.com/apikey), then set `LLM_API_KEY` to that key and `LLM_MODEL=gemini-3.5-flash-lite` in the local `.env` file. API access and quotas are separate from Gemini app/student subscriptions; check the project's tier and current model limits in AI Studio before sending requests. Free-tier usage may be subject to rate limits and data-use terms. Run `py -m app.llm_smoke_test` from the repository root. The script sends a fixed, non-sensitive test prompt and prints the model response. It never prints the API key. Configure the same variables in Vercel only when deploying the AI integration; do not commit `.env` or paste keys into source control.
 
 ### Vercel operations
 

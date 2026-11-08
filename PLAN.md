@@ -11,15 +11,15 @@ Solo hobby build. **1 day = one work session of about 2 hours.** At 5 sessions a
 
 ## Progress
 
-**Days done: 7 of 40** · Current: **Day 8** (start recruiting tenants) · Next: **Day 9** (`feat/observability`)
+**Days done: 17 of 40** · Current: **Day 19** (merge `feat/ai-agent`) · Also open: **Day 8** (send tenant outreach) · Next: **Day 20** (`feat/chat-ui`)
 
 | Branch | Days | Status |
 | --- | --- | --- |
 | `feat/rules-verify` | 1–4 | ✅ Merged and deleted |
-| `chore/deploy` | 5–7 | ✅ Live and merged (delete branch) |
-| `docs/research-and-audit` | 8 | ⬜ |
-| `feat/observability` | 9–11 | ⬜ |
-| `feat/ai-agent` | 12–19 | 🟡 Implementation complete; PR pending |
+| `chore/deploy` | 5–7 | ✅ Merged and deleted |
+| `docs/research-and-audit` | 8 | 🟡 Guide and practice interviews done; outreach not sent |
+| `feat/observability` | 9–11 | ✅ Merged (delete branch) |
+| `feat/ai-agent` | 12–19 | 🟡 Days 12–18 done; PR open |
 | `feat/chat-ui` | 20–24 | ⬜ |
 | `feat/alerts` | 25–30 | ⬜ |
 | `feat/offline-pwa` | 31–33 | ⬜ |
@@ -119,7 +119,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 
 **Day 11: Document and merge**
 - [x] Add an "Alerts and dashboards" section to `docs/runbook.md`
-- [ ] After deployment, verify a production Sentry test event appears
+- [x] After deployment, verify a production Sentry test event appears
 - [x] Open a PR; merge after required CI checks pass ([PR #3](https://github.com/erickmarcatoma/tenanttrack-nyc/pull/3))
 - [ ] Delete the branch after merge
 
@@ -133,7 +133,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 - [x] Choose the Gemini API with function-calling support
 - [x] Set `LLM_MODEL=gemini-3.5-flash-lite` in `.env.example` and document local/host setup
 - [x] Configure the Gemini `LLM_API_KEY` and `LLM_MODEL` locally and in Vercel
-- [x] Make one Gemini API call with `py -m app.llm_smoke_test` to confirm credentials work
+- [x] Make one simple Gemini API call with `py -m app.llm_smoke_test` to confirm credentials work
 
 **Day 13: Tool definitions**
 - [x] Write Gemini function declarations for `lookup_violations`, `check_deadlines`, and `draft_letter`

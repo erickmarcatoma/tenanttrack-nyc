@@ -1,7 +1,10 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
+
+os.environ["SENTRY_DSN"] = ""
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
