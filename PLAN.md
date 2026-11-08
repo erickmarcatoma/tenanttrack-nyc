@@ -19,7 +19,7 @@ Solo hobby build. **1 day = one work session of about 2 hours.** At 5 sessions a
 | `chore/deploy` | 5–7 | ✅ Live and merged (delete branch) |
 | `docs/research-and-audit` | 8 | ⬜ |
 | `feat/observability` | 9–11 | ⬜ |
-| `feat/ai-agent` | 12–19 | ⬜ |
+| `feat/ai-agent` | 12–19 | 🟡 Implementation complete; PR pending |
 | `feat/chat-ui` | 20–24 | ⬜ |
 | `feat/alerts` | 25–30 | ⬜ |
 | `feat/offline-pwa` | 31–33 | ⬜ |
@@ -131,9 +131,8 @@ Already done on `main`: project scaffold, search page, building report, letter p
 
 **Day 12: Pick the LLM**
 - [x] Choose the Gemini API with function-calling support
-- [x] Set the example model to `gemini-3.5-flash-lite` and document local/host configuration
-- [x] Add the Gemini `LLM_API_KEY` and `LLM_MODEL` to local `.env`
-- [x] Add `LLM_API_KEY` and `LLM_MODEL` to the host before deploying the AI integration
+- [x] Set `LLM_MODEL=gemini-3.5-flash-lite` in `.env.example` and document local/host setup
+- [x] Configure the Gemini `LLM_API_KEY` and `LLM_MODEL` locally and in Vercel
 - [x] Make one simple Gemini API call with `py -m app.llm_smoke_test` to confirm credentials work
 
 **Day 13: Tool definitions**
