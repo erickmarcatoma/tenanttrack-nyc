@@ -19,7 +19,7 @@ Solo hobby build. **1 day = one work session of about 2 hours.** At 5 sessions a
 | `chore/deploy` | 5–7 | ✅ Live and merged (delete branch) |
 | `docs/research-and-audit` | 8 | ⬜ |
 | `feat/observability` | 9–11 | ⬜ |
-| `feat/ai-agent` | 12–19 | ⬜ |
+| `feat/ai-agent` | 12–19 | 🟡 Implementation complete; PR pending |
 | `feat/chat-ui` | 20–24 | ⬜ |
 | `feat/alerts` | 25–30 | ⬜ |
 | `feat/offline-pwa` | 31–33 | ⬜ |
@@ -130,37 +130,38 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Weeks 3–4: `feat/ai-agent`
 
 **Day 12: Pick the LLM**
-- [ ] Choose an LLM API that supports tool calling
-- [ ] Add `LLM_API_KEY` and `LLM_MODEL` to `.env` and the host
-- [ ] Make one simple API call from a script to confirm it works
+- [x] Choose the Gemini API with function-calling support
+- [x] Set `LLM_MODEL=gemini-3.5-flash-lite` in `.env.example` and document local/host setup
+- [x] Configure the Gemini `LLM_API_KEY` and `LLM_MODEL` locally and in Vercel
+- [x] Make one Gemini API call with `py -m app.llm_smoke_test` to confirm credentials work
 
 **Day 13: Tool definitions**
-- [ ] Write the JSON schema for `lookup_violations`, `check_deadlines`, and `draft_letter`
-- [ ] Make `check_deadlines` accept a BIN (fetch, then evaluate)
+- [x] Write Gemini function declarations for `lookup_violations`, `check_deadlines`, and `draft_letter`
+- [x] Make `check_deadlines` accept a BIN (fetch, then evaluate)
 
 **Day 14: The agent loop**
-- [ ] Build the loop in `app/agent/agent.py`: send a message, run the tool calls, send the results, repeat (max 6 steps)
-- [ ] Log each tool call
+- [x] Build the loop in `app/agent/agent.py`: send a message, run the tool calls, send the results, repeat (max 6 steps)
+- [x] Log each tool call
 
 **Day 15: Connect the endpoint**
-- [ ] Make `POST /agent/ask` return a real answer
-- [ ] Test: "What's overdue in my building?" and "What does Class C mean?"
+- [x] Make `POST /agent/ask` return an answer through the agent loop
+- [x] Test: "What's overdue in my building?" and "What does Class C mean?"
 
 **Day 16: Spanish**
-- [ ] Test the same questions with `lang=es`
-- [ ] Fix any wording in `prompts/es.md`
+- [x] Test the same questions with `lang=es`
+- [x] Review `prompts/es.md`; no wording changes were needed
 
 **Day 17: Guardrails**
-- [ ] The agent never states a date the tools didn't return
-- [ ] It refuses legal advice and points to legal aid
-- [ ] It uses HPD's class names exactly
+- [x] The agent never states a date the tools didn't return
+- [x] It refuses common legal-advice requests and points to legal aid and 311
+- [x] It uses HPD's class names exactly
 
 **Day 18: Tests**
-- [ ] Mock the LLM and test the tool-calling loop
-- [ ] Test the max-steps limit and errors (missing key, LLM timeout)
+- [x] Mock Gemini and test the tool-calling loop
+- [x] Test the max-steps limit and errors (missing key, Gemini timeout)
 
 **Day 19: Merge**
-- [ ] Update `docs/architecture.md` with the agent flow
+- [x] Update `docs/architecture.md` with the agent flow
 - [ ] PR → merge → delete the branch
 
 ✅ **Done when:** the agent answers correctly in English and Spanish using only tool data.
