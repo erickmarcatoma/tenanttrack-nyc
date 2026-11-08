@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from app.api import templates
 from app.data import geoclient
 from app.i18n import normalize, translator
+from app.logging_config import log_upstream_error
 
 router = APIRouter()
 log = logging.getLogger(__name__)
@@ -29,8 +30,8 @@ async def search(address: str = Query(..., min_length=3, max_length=200), lang: 
     lang = normalize(lang)
     try:
         results = await geoclient.search(address)
-    except Exception:
-        log.exception("Geoclient lookup failed")
+    except Exception as exc:
+        log_upstream_error(log, "NYC Geoclient", exc)
         results = []
     if not results:
         return RedirectResponse(f"/?lang={lang}&error=1", status_code=303)

@@ -10,11 +10,12 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     log_level: str = "INFO"
+    sentry_dsn: str = ""
 
     nyc_open_data_app_token: str = ""
     nyc_open_data_base_url: str = "https://data.cityofnewyork.us/resource"
     geoclient_api_key: str = ""
-    geoclient_base_url: str = "https://api.nyc.gov/geo/geoclient/v2"
+    geoclient_base_url: str = "https://api.nyc.gov/geoclient/v2"
 
     database_url: str = ""
 

@@ -4,7 +4,8 @@ from datetime import date
 import pytest
 from fastapi.testclient import TestClient
 
-from app.data.geoclient import parse_search_response
+from app.config import Settings
+from app.data.geoclient import parse_search_response, search
 from app.data.hpd_client import parse_violations
 from app.data.nyc311_client import get_recent_complaints, parse_complaints
 from app.main import app
@@ -34,6 +35,42 @@ def test_parse_geoclient(geoclient_payload):
     assert loc.bin == "3000001"
     assert loc.bbl == "3012340001"
     assert loc.borough == "BROOKLYN"
+
+
+def test_geoclient_search_uses_v2_endpoint(monkeypatch, geoclient_payload):
+    settings = Settings(
+        _env_file=None,
+        geoclient_api_key="test-key",
+        geoclient_base_url="https://api.nyc.gov/geoclient/v2",
+    )
+    monkeypatch.setattr("app.data.geoclient.get_settings", lambda: settings)
+
+    class Response:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return geoclient_payload
+
+    class AsyncClient:
+        def __init__(self, *, timeout):
+            assert timeout == 10
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            pass
+
+        async def get(self, url, *, params, headers):
+            assert url == "https://api.nyc.gov/geoclient/v2/search.json"
+            assert params == {"input": "1 Main Street, Manhattan"}
+            assert headers == {"Ocp-Apim-Subscription-Key": "test-key"}
+            return Response()
+
+    monkeypatch.setattr("app.data.geoclient.httpx.AsyncClient", AsyncClient)
+    [location] = asyncio.run(search("1 Main Street, Manhattan"))
+    assert location.bin == "3000001"
 
 
 def test_311_rejects_bad_bbl():
