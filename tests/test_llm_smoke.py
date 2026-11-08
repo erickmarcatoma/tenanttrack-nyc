@@ -1,39 +1,47 @@
 import pytest
 
 from app.config import Settings
-from app.llm_smoke_test import API_URL, TEST_PROMPT, extract_output_text, run_smoke_test
+from app.llm_smoke_test import (
+    API_URL,
+    DEFAULT_MODEL,
+    TEST_PROMPT,
+    extract_output_text,
+    run_smoke_test,
+)
 
 
-def test_extract_output_text_skips_non_message_items():
+def test_extract_output_text_reads_candidate_parts():
     payload = {
-        "output": [
-            {"type": "reasoning", "summary": []},
+        "candidates": [
             {
-                "type": "message",
-                "content": [
-                    {"type": "output_text", "text": "TenantTrack"},
-                    {"type": "refusal", "refusal": "not used"},
-                    {"type": "output_text", "text": " works."},
-                ],
-            },
+                "content": {
+                    "parts": [
+                        {"text": "TenantTrack"},
+                        {"functionCall": {"name": "lookup_violations"}},
+                        {"text": " works."},
+                    ]
+                }
+            }
         ]
     }
 
     assert extract_output_text(payload) == "TenantTrack\n works."
 
 
-def test_smoke_test_posts_to_responses_api(monkeypatch):
+def test_extract_output_text_handles_missing_candidates():
+    assert extract_output_text({}) == ""
+    assert extract_output_text({"candidates": [{"content": {"parts": []}}]}) == ""
+
+
+def test_smoke_test_posts_to_gemini_api(monkeypatch):
     class Response:
         def raise_for_status(self):
             pass
 
         def json(self):
             return {
-                "output": [
-                    {
-                        "type": "message",
-                        "content": [{"type": "output_text", "text": "Connection works."}],
-                    }
+                "candidates": [
+                    {"content": {"parts": [{"text": "Connection works."}]}}
                 ]
             }
 
@@ -48,17 +56,16 @@ def test_smoke_test_posts_to_responses_api(monkeypatch):
             pass
 
         def post(self, url, *, headers, json):
-            assert url == API_URL
-            assert headers == {"Authorization": "Bearer test-key"}
+            assert url == f"{API_URL}/{DEFAULT_MODEL}:generateContent"
+            assert headers == {"x-goog-api-key": "test-key"}
             assert json == {
-                "model": "gpt-5.4-mini",
-                "input": TEST_PROMPT,
-                "max_output_tokens": 64,
+                "contents": [{"parts": [{"text": TEST_PROMPT}]}],
+                "generationConfig": {"maxOutputTokens": 64},
             }
             return Response()
 
     monkeypatch.setattr("app.llm_smoke_test.httpx.Client", Client)
-    settings = Settings(_env_file=None, llm_api_key="test-key", llm_model="gpt-5.4-mini")
+    settings = Settings(_env_file=None, llm_api_key="test-key", llm_model=DEFAULT_MODEL)
 
     assert run_smoke_test(settings) == "Connection works."
 
@@ -66,7 +73,7 @@ def test_smoke_test_posts_to_responses_api(monkeypatch):
 @pytest.mark.parametrize(
     ("api_key", "model", "message"),
     [
-        ("", "gpt-5.4-mini", "LLM_API_KEY"),
+        ("", DEFAULT_MODEL, "LLM_API_KEY"),
         ("test-key", "", "LLM_MODEL"),
     ],
 )

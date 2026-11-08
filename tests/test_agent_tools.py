@@ -1,6 +1,10 @@
+import asyncio
 from datetime import date
 
-from app.agent.tools import check_deadlines, draft_letter
+import pytest
+
+from app.agent import tools
+from app.agent.tools import TOOL_DEFINITIONS, check_deadlines, draft_letter
 from app.alerts.job import diff
 from app.data.hpd_client import parse_violations
 from app.i18n.dates import format_date
@@ -8,11 +12,43 @@ from app.i18n.dates import format_date
 TODAY = date(2026, 11, 2)
 
 
-def test_check_deadlines(hpd_rows):
-    results = {r["id"]: r for r in check_deadlines(parse_violations(hpd_rows), today=TODAY)}
+def test_check_deadlines_fetches_by_bin(hpd_rows, monkeypatch):
+    violations = parse_violations(hpd_rows)
+    requested_bins = []
+
+    async def get_open_violations(bin_):
+        requested_bins.append(bin_)
+        return violations
+
+    monkeypatch.setattr(tools.hpd_client, "get_open_violations", get_open_violations)
+    results = {
+        r["id"]: r for r in asyncio.run(check_deadlines("3000001", today=TODAY))
+    }
+
+    assert requested_bins == ["3000001"]
     assert results["15001001"]["status"] == "overdue"
     assert results["15001002"]["status"] == "on_time"
     assert results["15001003"]["status"] == "closed"
+
+
+def test_agent_tools_reject_invalid_bin():
+    with pytest.raises(ValueError, match="7 digits"):
+        asyncio.run(check_deadlines("not-a-bin"))
+
+
+def test_tool_definitions_match_expected_inputs():
+    definitions = {definition["name"]: definition for definition in TOOL_DEFINITIONS}
+
+    assert set(definitions) == {"lookup_violations", "check_deadlines", "draft_letter"}
+    for definition in definitions.values():
+        schema = definition["parameters"]
+        assert schema["type"] == "OBJECT"
+        assert schema["properties"]["bin"]["type"] == "STRING"
+        assert "bin" in schema["required"]
+    assert definitions["draft_letter"]["parameters"]["properties"]["lang"]["enum"] == [
+        "en",
+        "es",
+    ]
 
 
 def test_letter_has_date_address_ids_and_deadline(hpd_rows):

@@ -125,3 +125,22 @@ def test_geoclient_error_log_has_name_and_status(capture_json_logs, monkeypatch)
     assert record["status_code"] == 401
     assert record["error_type"] == "HTTPStatusError"
     assert "private address" not in stream.getvalue()
+
+
+def test_agent_tool_log_has_tool_name_and_step(capture_json_logs):
+    stream = capture_json_logs("app.agent.agent")
+    logger = logging.getLogger("app.agent.agent")
+
+    logger.info(
+        "Agent tool call started",
+        extra={
+            "event": "agent_tool_started",
+            "tool_name": "lookup_violations",
+            "step": 2,
+        },
+    )
+
+    [record] = [json.loads(line) for line in stream.getvalue().splitlines()]
+    assert record["event"] == "agent_tool_started"
+    assert record["tool_name"] == "lookup_violations"
+    assert record["step"] == 2

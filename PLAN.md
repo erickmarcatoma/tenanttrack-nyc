@@ -119,7 +119,7 @@ Already done on `main`: project scaffold, search page, building report, letter p
 
 **Day 11: Document and merge**
 - [x] Add an "Alerts and dashboards" section to `docs/runbook.md`
-- [ ] After deployment, verify a production Sentry test event appears
+- [x] After deployment, verify a production Sentry test event appears
 - [x] Open a PR; merge after required CI checks pass ([PR #3](https://github.com/erickmarcatoma/tenanttrack-nyc/pull/3))
 - [ ] Delete the branch after merge
 
@@ -130,18 +130,19 @@ Already done on `main`: project scaffold, search page, building report, letter p
 ## Weeks 3–4: `feat/ai-agent`
 
 **Day 12: Pick the LLM**
-- [x] Choose the OpenAI Responses API with function-calling support
-- [x] Set the example model to `gpt-5.4-mini` and document local/host configuration
-- [ ] Add `LLM_API_KEY` and `LLM_MODEL` to local `.env` and the host
-- [ ] Make one simple API call with `py -m app.llm_smoke_test` to confirm credentials work
+- [x] Choose the Gemini API with function-calling support
+- [x] Set the example model to `gemini-3.5-flash-lite` and document local/host configuration
+- [x] Add the Gemini `LLM_API_KEY` and `LLM_MODEL` to local `.env`
+- [x] Add `LLM_API_KEY` and `LLM_MODEL` to the host before deploying the AI integration
+- [x] Make one simple Gemini API call with `py -m app.llm_smoke_test` to confirm credentials work
 
 **Day 13: Tool definitions**
-- [ ] Write the JSON schema for `lookup_violations`, `check_deadlines`, and `draft_letter`
-- [ ] Make `check_deadlines` accept a BIN (fetch, then evaluate)
+- [x] Write Gemini function declarations for `lookup_violations`, `check_deadlines`, and `draft_letter`
+- [x] Make `check_deadlines` accept a BIN (fetch, then evaluate)
 
 **Day 14: The agent loop**
-- [ ] Build the loop in `app/agent/agent.py`: send a message, run the tool calls, send the results, repeat (max 6 steps)
-- [ ] Log each tool call
+- [x] Build the loop in `app/agent/agent.py`: send a message, run the tool calls, send the results, repeat (max 6 steps)
+- [x] Log each tool call
 
 **Day 15: Connect the endpoint**
 - [ ] Make `POST /agent/ask` return a real answer
