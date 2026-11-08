@@ -1,5 +1,6 @@
 """AI assistant endpoints."""
 
+import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
@@ -42,6 +43,8 @@ async def draft(req: DraftRequest) -> dict[str, str]:
 async def ask(req: AskRequest) -> dict[str, str]:
     try:
         answer = await Agent(lang=normalize(req.lang)).run(req.message, req.bin)
+    except httpx.TimeoutException as exc:
+        raise HTTPException(status_code=504, detail="Gemini request timed out") from exc
     except (RuntimeError, NotImplementedError) as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     return {"answer": answer}

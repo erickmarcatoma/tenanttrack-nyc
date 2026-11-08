@@ -1,6 +1,7 @@
 import asyncio
 import logging
 
+import httpx
 import pytest
 
 from app.agent import agent as agent_module
@@ -63,6 +64,154 @@ def test_agent_returns_text_response(monkeypatch):
     assert request["json"]["tools"] == [
         {"functionDeclarations": agent_module.tools.TOOL_DEFINITIONS}
     ]
+
+
+def test_agent_propagates_gemini_timeout(monkeypatch):
+    settings = Settings(
+        _env_file=None,
+        llm_api_key="test-key",
+        llm_model="gemini-test",
+    )
+    monkeypatch.setattr(agent_module, "get_settings", lambda: settings)
+
+    class AsyncClient:
+        def __init__(self, *, timeout):
+            assert timeout == 30
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            pass
+
+        async def post(self, url, *, headers, json):
+            raise httpx.ReadTimeout("Gemini request timed out")
+
+    monkeypatch.setattr(agent_module.httpx, "AsyncClient", AsyncClient)
+
+    with pytest.raises(httpx.ReadTimeout, match="Gemini request timed out"):
+        asyncio.run(agent_module.Agent().run("Hello"))
+
+
+@pytest.mark.parametrize(
+    ("answer", "tool_results", "expected"),
+    [
+        (
+            "The deadline is Jan 11, 2026.",
+            [{"deadline": "2026-01-11"}],
+            "The deadline is Jan 11, 2026.",
+        ),
+        (
+            "The deadline is Jan 12, 2026.",
+            [{"deadline": "2026-01-11"}],
+            agent_module.UNVERIFIED_DATE_RESPONSE["en"],
+        ),
+        (
+            "The deadline is 11 de ene. de 2026.",
+            [{"deadline": "2026-01-11"}],
+            "The deadline is 11 de ene. de 2026.",
+        ),
+        (
+            "The deadline is 1/11/2026.",
+            [{"deadline": "2026-01-11"}],
+            "The deadline is 1/11/2026.",
+        ),
+        (
+            "The deadline is 1/12/2026.",
+            [{"deadline": "2026-01-11"}],
+            agent_module.UNVERIFIED_DATE_RESPONSE["en"],
+        ),
+        (
+            "The deadline is January 11th, 2026.",
+            [{"deadline": "2026-01-11"}],
+            "The deadline is January 11th, 2026.",
+        ),
+        (
+            "The deadline is 1/12/26.",
+            [{"deadline": "2026-01-11"}],
+            agent_module.UNVERIFIED_DATE_RESPONSE["en"],
+        ),
+    ],
+)
+def test_guardrail_only_allows_dates_from_tool_results(answer, tool_results, expected):
+    assert agent_module._guardrail_answer(answer, tool_results, "en") == expected
+
+
+def test_agent_replaces_model_date_not_returned_by_tool(monkeypatch):
+    configure_agent(
+        monkeypatch,
+        [
+            candidate(
+                {
+                    "functionCall": {
+                        "name": "check_deadlines",
+                        "args": {"bin": "1111111"},
+                    }
+                }
+            ),
+            candidate({"text": "The deadline is Jan 12, 2026."}),
+        ],
+    )
+
+    async def check_deadlines(**kwargs):
+        return [{"id": "123", "deadline": "2026-01-11", "status": "overdue"}]
+
+    monkeypatch.setitem(agent_module.TOOL_REGISTRY, "check_deadlines", check_deadlines)
+
+    answer = asyncio.run(agent_module.Agent().run("When is the deadline?"))
+
+    assert answer == agent_module.UNVERIFIED_DATE_RESPONSE["en"]
+
+
+@pytest.mark.parametrize(
+    ("answer", "lang", "expected"),
+    [
+        (
+            "Class C is serious.",
+            "en",
+            agent_module.UNVERIFIED_CLASS_RESPONSE["en"],
+        ),
+        (
+            "La Clase C es grave.",
+            "es",
+            agent_module.UNVERIFIED_CLASS_RESPONSE["es"],
+        ),
+        ("Class C is Immediately hazardous.", "en", "Class C is Immediately hazardous."),
+        (
+            "La Clase C es Inmediatamente peligrosa.",
+            "es",
+            "La Clase C es Inmediatamente peligrosa.",
+        ),
+    ],
+)
+def test_guardrail_requires_official_class_label(answer, lang, expected):
+    assert agent_module._guardrail_answer(answer, [], lang) == expected
+
+
+@pytest.mark.parametrize(
+    ("message", "lang", "expected"),
+    [
+        (
+            "Should I sue my landlord?",
+            "en",
+            agent_module.LEGAL_ADVICE_REFUSAL["en"],
+        ),
+        (
+            "¿Debo demandar al propietario?",
+            "es",
+            agent_module.LEGAL_ADVICE_REFUSAL["es"],
+        ),
+    ],
+)
+def test_agent_refuses_legal_advice_without_calling_model(
+    monkeypatch, message, lang, expected
+):
+    requests = configure_agent(monkeypatch, [])
+
+    answer = asyncio.run(agent_module.Agent(lang=lang).run(message))
+
+    assert answer == expected
+    assert requests == []
 
 
 def test_agent_executes_tool_and_sends_result_back(monkeypatch):
